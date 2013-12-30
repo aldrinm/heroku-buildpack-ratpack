@@ -17,6 +17,8 @@ JDK7_URL="https://s3.amazonaws.com/heroku-jdk/${JAVA_DIST}.tar.gz"
 #create the cache dir if it doesn't exist
 mkdir -p $CACHE_DIR
 
+rm -rf "$CACHE_DIR/.jdk7"
+
 cd "$BUILD_DIR"
 
 #jdk7
