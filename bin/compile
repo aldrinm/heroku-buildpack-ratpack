@@ -11,32 +11,32 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 
 #env variables
-JAVA_DIST="openjdk1.7.0_45"
-JDK7_URL="https://s3.amazonaws.com/heroku-jdk/${JAVA_DIST}.tar.gz"
+JAVA_DIST="openjdk1.8.0_b107"
+JDK8_URL="https://s3.amazonaws.com/heroku-jdk/${JAVA_DIST}.tar.gz"
 
 #create the cache dir if it doesn't exist
 mkdir -p $CACHE_DIR
 
-rm -rf "$CACHE_DIR/.jdk7"
+# rm -rf "$CACHE_DIR/.jdk8"
 
 cd "$BUILD_DIR"
 
 #jdk7
-if [ -d .jdk7 ]; then
-  echo ".jdk7 folder found, moving along."
+if [ -d .jdk8 ]; then
+  echo ".jdk8 folder found, moving along."
 
 else
-  echo -n ".jdk7 folder not found! "
-  if [[ -d "$CACHE_DIR/.jdk7" ]]; then
+  echo -n ".jdk8 folder not found! "
+  if [[ -d "$CACHE_DIR/.jdk8" ]]; then
     echo -n "Copying jdk from cache to app... "
-    cp -r "$CACHE_DIR/.jdk7" "$BUILD_DIR"
+    cp -r "$CACHE_DIR/.jdk8" "$BUILD_DIR"
     echo "Done!"
 
   else
-    echo "-----> Installing ${JAVA_DIST} build (to .jdk7)....."
-    mkdir "$BUILD_DIR/.jdk7"
-    cd "$BUILD_DIR/.jdk7"
-    curl --max-time 180 --location "$JDK7_URL" | tar xz
+    echo "-----> Installing ${JAVA_DIST} build (to .jdk8)....."
+    mkdir "$BUILD_DIR/.jdk8"
+    cd "$BUILD_DIR/.jdk8"
+    curl --max-time 180 --location "$JDK8_URL" | tar xz
     cd "$BUILD_DIR"
     echo "Done!"
   fi
@@ -44,7 +44,7 @@ fi
 
 cd $BUILD_DIR
 
-export JAVA_HOME="$BUILD_DIR/.jdk7"
+export JAVA_HOME="$BUILD_DIR/.jdk8"
 export PATH="$JAVA_HOME/bin:$PATH"
 
 echo ""
@@ -55,5 +55,5 @@ export GRADLE_USER_HOME="$CACHE_DIR/.gradle"
 
 ./gradlew clean installApp --refresh-dependencies
 
-rm -rf "$CACHE_DIR/.jdk7"
-cp -r .jdk7 "$CACHE_DIR/.jdk7"
+rm -rf "$CACHE_DIR/.jdk8"
+cp -r .jdk8 "$CACHE_DIR/.jdk8"
